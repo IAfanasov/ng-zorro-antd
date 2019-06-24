@@ -14,6 +14,7 @@ import {
   ElementRef,
   Host,
   Input,
+  OnInit,
   Optional,
   Renderer2,
   ViewEncapsulation
@@ -23,6 +24,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NzNoAnimationDirective } from 'ng-zorro-antd/core';
 import { DateHelperService, NzI18nService } from 'ng-zorro-antd/i18n';
 
+import { tap } from 'rxjs/operators';
 import { HeaderPickerComponent, SupportHeaderPanel } from './header-picker.component';
 
 @Component({
@@ -39,8 +41,8 @@ import { HeaderPickerComponent, SupportHeaderPanel } from './header-picker.compo
     }
   ]
 })
-export class NzMonthPickerComponent extends HeaderPickerComponent {
-  @Input() nzFormat: string = 'yyyy-MM';
+export class NzMonthPickerComponent extends HeaderPickerComponent implements OnInit {
+  @Input() nzFormat: string;
 
   endPanelMode: SupportHeaderPanel = 'month';
 
@@ -54,5 +56,24 @@ export class NzMonthPickerComponent extends HeaderPickerComponent {
   ) {
     super(i18n, cdr, dateHelper, noAnimation);
     renderer.addClass(elementRef.nativeElement, 'ant-calendar-picker');
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+
+    // Default or locale's format when it's empty
+    if (!this.nzFormat) {
+      this.i18n.localeChange
+        .pipe(
+          tap(() => {
+            if (this.dateHelper.relyOnDatePipe) {
+              this.nzFormat = 'YYYY-MM';
+            } else {
+              this.nzFormat = this.i18n.getLocaleData('DatePicker.lang.monthFormat', 'yyyy-MM');
+            }
+          })
+        )
+        .subscribe();
+    }
   }
 }

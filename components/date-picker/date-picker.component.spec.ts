@@ -709,7 +709,7 @@ describe('NzDatePickerComponent', () => {
       openPickerByClickTrigger();
       const input = queryFromOverlay('.ant-calendar-date-input-wrap input.ant-calendar-input') as HTMLInputElement;
 
-      // Wrong inputing support
+      // Wrong input support
       input.value = 'wrong';
       input.dispatchEvent(new KeyboardEvent('keyup'));
       fixture.detectChanges();
@@ -717,7 +717,7 @@ describe('NzDatePickerComponent', () => {
       fixture.detectChanges();
       expect(input.classList.contains('ant-calendar-input-invalid')).toBeTruthy();
 
-      // Correct inputing
+      // Correct input
       input.value = '2018-11-22';
       input.dispatchEvent(new KeyboardEvent('keyup'));
       // dispatchKeyboardEvent(input, 'keyup', ENTER); // Not working?
@@ -730,13 +730,13 @@ describe('NzDatePickerComponent', () => {
     }));
   }); // /specified date picker testing
 
-  describe('ngModel value accesors', () => {
+  describe('ngModel value accessors', () => {
     beforeEach(() => (fixtureInstance.useSuite = 3));
 
     it('should specified date provide by "modelValue" be choosed', fakeAsync(() => {
       fixtureInstance.modelValue = new Date('2018-11-11');
       fixture.detectChanges();
-      flush(); // Wait writeValue() tobe done
+      flush(); // Wait writeValue() to be done
       fixture.detectChanges();
       expect(getSelectedDayCell().textContent!.trim()).toBe('11');
 

@@ -15,7 +15,7 @@ module.exports = function(config) {
       require('karma-viewport')
     ],
     client: {
-      clearContext: true // leave Jasmine Spec Runner output visible in browser
+      clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../coverage'),
@@ -25,7 +25,7 @@ module.exports = function(config) {
     reporters: ['progress', 'kjhtml', 'spec'],
     specReporter: {
       maxLogLines: 5,
-      suppressErrorSummary: true,
+      suppressErrorSummary: false,
       suppressFailed: false,
       suppressPassed: false,
       suppressSkipped: true,

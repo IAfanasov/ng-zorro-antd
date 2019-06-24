@@ -50,6 +50,7 @@ export interface NzCalendarI18nInterface {
   decadeSelect: string;
   yearFormat: string;
   monthFormat?: string;
+  weekFormat?: string;
   dateFormat: string;
   dayFormat: string;
   dateTimeFormat: string;

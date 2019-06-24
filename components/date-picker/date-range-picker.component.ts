@@ -20,6 +20,7 @@ import {
 
 import { toBoolean, valueFunctionProp, FunctionProp, InputBoolean, NzNoAnimationDirective } from 'ng-zorro-antd/core';
 import { DateHelperService, NzI18nService } from 'ng-zorro-antd/i18n';
+import { tap } from 'rxjs/operators';
 
 import { AbstractPickerComponent, CompatibleDate } from './abstract-picker.component';
 import { CandyDate } from './lib/candy-date/candy-date';
@@ -70,17 +71,27 @@ export class DateRangePickerComponent extends AbstractPickerComponent implements
   ngOnInit(): void {
     super.ngOnInit();
 
-    // Default format when it's empty
+    // Default or locale's format when it's empty
     if (!this.nzFormat) {
-      if (this.showWeek) {
-        this.nzFormat = this.dateHelper.relyOnDatePipe ? 'yyyy-ww' : 'YYYY-WW'; // Format for week
-      } else {
-        if (this.dateHelper.relyOnDatePipe) {
-          this.nzFormat = this.nzShowTime ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd';
-        } else {
-          this.nzFormat = this.nzShowTime ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
-        }
-      }
+      this.i18n.localeChange
+        .pipe(
+          tap(() => {
+            if (this.showWeek) {
+              this.nzFormat = this.dateHelper.relyOnDatePipe // Format for week
+                ? 'yyyy-ww'
+                : this.i18n.getLocaleData('DatePicker.lang.weekFormat', 'yyyy-WW');
+            } else {
+              if (this.dateHelper.relyOnDatePipe) {
+                this.nzFormat = this.nzShowTime ? 'yyyy-MM-dd HH:mm:ss' : 'yyyy-MM-dd';
+              } else {
+                this.nzFormat = this.nzShowTime
+                  ? this.i18n.getLocaleData('DatePicker.lang.dateTimeFormat', 'yyyy-MM-dd HH:mm:ss')
+                  : this.i18n.getLocaleData('DatePicker.lang.dateInputFormat', 'yyyy-MM-dd');
+              }
+            }
+          })
+        )
+        .subscribe();
     }
   }
 
